@@ -7,18 +7,22 @@
 
 ### 采用了第3种解决办法，并对其进行了优化：
 #### 问题：
-如果监听/data/data/<package name>这个目录，会有两个问题：
+监听/data/data/<package name>这个目录，还存在以下几个问题：
 
-1. 如果版本更新的话，也会弹出反馈网页
-2. 如果对这个目录下任何文件进行了删除操作，都会弹出反馈网页
+1. 清除数据、插拔USB线、覆盖安装等操作引起程序误判卸载。
+2. 重复监听的问题。
+3. 用户将已在Internal SD卡安装好的应用移动到external SD卡，导致监听不正常。
 
 #### 原因：
-由于inotify_add_watch(fileDescriptor, path, IN_DELETE)这个函数会监听path目录下所有文件的删除操作导致。
+1. 由于inotify_add_watch(fileDescriptor, path, IN_DELETE)这个函数会监听path目录下所有文件的删除操作导致。
+2. 重复调用JNI的init方法
+3. 暂时未修复
 
 #### 解决方法：
-创建一个特殊的文件用于卸载监听，不要监听整个app目录。具体做法是：APP启动的时候，在/data/data/<package name>/files/下创建一个专用于卸载监听的文件，然后监听这个文件有没有被删除。
+1. 监听不应该针对整个文件夹，而是某个文件。
+2. 重复监听的问题，都可以通过加文件锁来防止
 
-详细方案可参考我的博文：[Android监听自己是否被卸载](lzyblog.com)
+详细方案可参考我的博文：[Android监听自己是否被卸载](http://lzyblog.com/2015/01/09/Android%E5%BA%94%E7%94%A8%E7%9B%91%E5%90%AC%E8%87%AA%E5%B7%B1%E6%98%AF%E5%90%A6%E8%A2%AB%E5%8D%B8%E8%BD%BD%EF%BC%8C%E5%81%9A%E5%8F%8D%E9%A6%88%E7%BB%9F%E8%AE%A1/)
 
 参考自:
 

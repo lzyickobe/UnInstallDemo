@@ -74,6 +74,8 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
     }
     else if (pid == 0)
     {
+	    LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+	            , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "fork Success !!!"), &isCopy));
         // 若监听文件所在文件夹不存在，创建
         FILE *p_filesDir = fopen(APP_FILES_DIR, "r");
         if (p_filesDir == NULL)
@@ -86,13 +88,25 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
 
                 exit(1);
             }
+            LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+	            , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "mkdir Success !!!"), &isCopy));
         }
+        LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+	            , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "app dir is exist !!!"), &isCopy));
+        
 
         // 若被监听文件不存在，创建文件
         FILE *p_observedFile = fopen(APP_OBSERVED_FILE, "r");
         if (p_observedFile == NULL)
         {
+         LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+	            , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "the observed file is not existed!!!"), &isCopy));
             p_observedFile = fopen(APP_OBSERVED_FILE, "w");
+            if (p_observedFile == NULL) {
+            LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+	            , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "the observed file create falied!!!"), &isCopy));
+            }
+            
         }
         fclose(p_observedFile);
 
@@ -175,13 +189,23 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
             LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
                     , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, p_maskStr), &isCopy));
 
-            // 若文件被删除，可能是已卸载，还需进一步判断app文件夹是否存在
             if (IN_DELETE_SELF == ((struct inotify_event *) p_buf)->mask)
             {
+            	LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+                    , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "the observer file is deleted"), &isCopy));
+                
+                 inotify_rm_watch(fileDescriptor, watchDescriptor);
+                 break;
+                 
+                //实际判断是有问题的，不能确定哪个是卸载，哪个是清除数据，先屏蔽
+                
+                /*
                 FILE *p_appDir = fopen(APP_DIR, "r");
                 // 确认已卸载
                 if (p_appDir == NULL)
                 {
+	                LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+	                    , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "app is uninstall"), &isCopy));
                     inotify_rm_watch(fileDescriptor, watchDescriptor);
 
                     break;
@@ -189,24 +213,27 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
                 // 未卸载，可能用户执行了"清除数据"
                 else
                 {
-                    fclose(p_appDir);
-
-                    // 重新创建被监听文件，并重新监听
-                    FILE *p_observedFile = fopen(APP_OBSERVED_FILE, "w");
-                    fclose(p_observedFile);
-
-                    int watchDescriptor = inotify_add_watch(fileDescriptor, APP_OBSERVED_FILE, IN_ALL_EVENTS);
-                    if (watchDescriptor < 0)
-                    {
-                        free(p_buf);
-                        free(p_maskStr);
-
-                        LOG_ERROR((*env)->GetStringUTFChars(env, tag, &isCopy)
-                                , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "inotify_add_watch failed !!!"), &isCopy));
-
-                        exit(1);
-                    }
+	                LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
+	                    , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "app not uninstall , the data is empty"), &isCopy));
+	                    fclose(p_appDir);
+	
+	                    // 重新创建被监听文件，并重新监听
+	                    FILE *p_observedFile = fopen(APP_OBSERVED_FILE, "w");
+	                    fclose(p_observedFile);
+	
+	                    int watchDescriptor = inotify_add_watch(fileDescriptor, APP_OBSERVED_FILE, IN_ALL_EVENTS);
+	                    if (watchDescriptor < 0)
+	                    {
+	                        free(p_buf);
+	                        free(p_maskStr);
+	
+	                        LOG_ERROR((*env)->GetStringUTFChars(env, tag, &isCopy)
+	                                , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "inotify_add_watch failed !!!"), &isCopy));
+	
+	                        exit(1);
+                    	}
                 }
+                */
             }
         }
 

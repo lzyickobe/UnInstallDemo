@@ -1,5 +1,7 @@
 package com.lzyblog.uninstalldemo;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -49,6 +51,9 @@ public class UninstalledObserverActivity extends Activity {
 
 		setContentView(R.layout.activity_main);
 
+		createFile();
+		
+		
 		// API level小于17，不需要获取userSerialNumber
 		if (Build.VERSION.SDK_INT < 17) {
 			mObserverProcessPid = init(null, WEBSITE);
@@ -56,6 +61,33 @@ public class UninstalledObserverActivity extends Activity {
 		// 否则，需要获取userSerialNumber
 		else {
 			mObserverProcessPid = init(getUserSerial(), WEBSITE);
+		}
+	}
+
+	private void createFile() {
+		File file = new File("/data/data/com.lzyblog.uninstalldemo/files/observedFile");
+		if (!file.exists()) {
+			try {
+				File dir = new File("/data/data/com.lzyblog.uninstalldemo/files");
+				if (!dir.exists()) {
+					if (dir.mkdir()) {
+						Log.e(TAG, "创建files目录成功");
+					} else {
+						Log.e(TAG, "创建files目录失败");
+						return;
+					}
+				}
+				if (file.createNewFile()) {
+					Log.e(TAG, "创建observedFile成功");
+					return;
+				}
+				Log.e(TAG, "创建observedFile失败");
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e(TAG, "创建observedFile失败");
+			}
+		} else {
+			Log.e(TAG, "observedFile存在");
 		}
 	}
 

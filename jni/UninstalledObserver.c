@@ -197,7 +197,7 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
                  //inotify_rm_watch(fileDescriptor, watchDescriptor);
                  //break;
                  
-                //实际判断是有问题的，不能确定哪个是卸载，哪个是清除数据，先屏蔽
+                //清除数据的时候不会删除lib文件，apk被卸载的时候lib文件会被删除，所以通过lib文件可以区分是清除数据还是apk卸载
                 
                 
                 FILE *p_appDir = fopen(APP_DIR, "r");

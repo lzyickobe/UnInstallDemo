@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * NOTICE:Õâ·İcÎÄ¼şÓĞÁ½´¦ĞèÒª¸Ä¶¯£¬·Ö±ğ±êÊ¶ÁË TODO1 ¡¢ TODO2
+ * NOTICE:è¿™ä»½cæ–‡ä»¶æœ‰ä¸¤å¤„éœ€è¦æ”¹åŠ¨ï¼Œåˆ†åˆ«æ ‡è¯†äº† TODO1 ã€ TODO2
  */
 #include<jni.h>
 #include<stdlib.h>
@@ -27,33 +27,33 @@
 
 #include<android/log.h>
 
-/* ºê¶¨Òåbegin */
-//Çå0ºê
+/* å®å®šä¹‰begin */
+//æ¸…0å®
 #define MEM_ZERO(pDest, destSize) memset(pDest, 0, destSize)
 
-//LOGºê¶¨Òå
+//LOGå®å®šä¹‰
 #define LOG_INFO(tag, msg) __android_log_write(ANDROID_LOG_INFO, tag, msg)
 #define LOG_DEBUG(tag, msg) __android_log_write(ANDROID_LOG_DEBUG, tag, msg)
 #define LOG_WARN(tag, msg) __android_log_write(ANDROID_LOG_WARN, tag, msg)
 #define LOG_ERROR(tag, msg) __android_log_write(ANDROID_LOG_ERROR, tag, msg)
 
 
-/* ÄÚÈ«¾Ö±äÁ¿begin */
+/* å†…å…¨å±€å˜é‡begin */
 static char TAG[] = "UninstalledObserverActivity.init";
 static jboolean isCopy = JNI_TRUE;
 
-//--TODO1--------------------ÒÔÏÂĞèÒª¸Ä³É×Ô¼ºapkµÄ°üÃû------------------------------------
-static const char APP_DIR[] = "/data/data/com.lzyblog.uninstalldemo";
+//--TODO1--------------------ä»¥ä¸‹éœ€è¦æ”¹æˆè‡ªå·±apkçš„åŒ…å------------------------------------
+static const char APP_DIR[] = "/data/data/com.lzyblog.uninstalldemo/lib";
 static const char APP_FILES_DIR[] = "/data/data/com.lzyblog.uninstalldemo/files";
 static const char APP_OBSERVED_FILE[] = "/data/data/com.lzyblog.uninstalldemo/files/observedFile";
 static const char APP_LOCK_FILE[] = "/data/data/com.lzyblog.uninstalldemo/files/lockFile";
-/* ÄÚÈ«¾Ö±äÁ¿ */
+/* å†…å…¨å±€å˜é‡ */
 
 /*-------TODO2-----------------------
- * Class:     ĞèÒª¸Ä³É×Ô¼ºappµÄÀàÃû
+ * Class:     éœ€è¦æ”¹æˆè‡ªå·±appçš„ç±»å
  * Method:    init
  * Signature: ()V
- * return: ×Ó½ø³Ìpid
+ * return: å­è¿›ç¨‹pid
  */
 JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity_init(JNIEnv *env, jobject obj, jstring userSerial, jstring website)
 {
@@ -63,7 +63,7 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
     LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
             , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "init observer"), &isCopy));
 
-    // fork×Ó½ø³Ì£¬ÒÔÖ´ĞĞÂÖÑ¯ÈÎÎñ
+    // forkå­è¿›ç¨‹ï¼Œä»¥æ‰§è¡Œè½®è¯¢ä»»åŠ¡
     pid_t pid = fork();
     if (pid < 0)
     {
@@ -76,7 +76,7 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
     {
 	    LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
 	            , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "fork Success !!!"), &isCopy));
-        // Èô¼àÌıÎÄ¼şËùÔÚÎÄ¼ş¼Ğ²»´æÔÚ£¬´´½¨
+        // è‹¥ç›‘å¬æ–‡ä»¶æ‰€åœ¨æ–‡ä»¶å¤¹ä¸å­˜åœ¨ï¼Œåˆ›å»º
         FILE *p_filesDir = fopen(APP_FILES_DIR, "r");
         if (p_filesDir == NULL)
         {
@@ -95,7 +95,7 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
 	            , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "app dir is exist !!!"), &isCopy));
         
 
-        // Èô±»¼àÌıÎÄ¼ş²»´æÔÚ£¬´´½¨ÎÄ¼ş
+        // è‹¥è¢«ç›‘å¬æ–‡ä»¶ä¸å­˜åœ¨ï¼Œåˆ›å»ºæ–‡ä»¶
         FILE *p_observedFile = fopen(APP_OBSERVED_FILE, "r");
         if (p_observedFile == NULL)
         {
@@ -110,7 +110,7 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
         }
         fclose(p_observedFile);
 
-        // ´´½¨ËøÎÄ¼ş£¬Í¨¹ı¼ì²â¼ÓËø×´Ì¬À´±£Ö¤Ö»ÓĞÒ»¸öĞ¶ÔØ¼àÌı½ø³Ì
+        // åˆ›å»ºé”æ–‡ä»¶ï¼Œé€šè¿‡æ£€æµ‹åŠ é”çŠ¶æ€æ¥ä¿è¯åªæœ‰ä¸€ä¸ªå¸è½½ç›‘å¬è¿›ç¨‹
         int lockFileDescriptor = open(APP_LOCK_FILE, O_RDONLY);
         if (lockFileDescriptor == -1)
         {
@@ -127,7 +127,7 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
         LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
                     , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "observed by child process"), &isCopy));
 
-        // ·ÖÅä¿Õ¼ä£¬ÒÔ±ã¶ÁÈ¡event
+        // åˆ†é…ç©ºé—´ï¼Œä»¥ä¾¿è¯»å–event
         void *p_buf = malloc(sizeof(struct inotify_event));
         if (p_buf == NULL)
         {
@@ -136,8 +136,8 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
 
             exit(1);
         }
-        // ·ÖÅä¿Õ¼ä£¬ÒÔ±ã´òÓ¡mask
-        int maskStrLength = 7 + 10 + 1;// mask=0xÕ¼7×Ö½Ú£¬32Î»ÕûĞÎÊı×î´óÎª10Î»£¬×ª»»Îª×Ö·û´®Õ¼10×Ö½Ú£¬'\0'Õ¼1×Ö½Ú
+        // åˆ†é…ç©ºé—´ï¼Œä»¥ä¾¿æ‰“å°mask
+        int maskStrLength = 7 + 10 + 1;// mask=0xå 7å­—èŠ‚ï¼Œ32ä½æ•´å½¢æ•°æœ€å¤§ä¸º10ä½ï¼Œè½¬æ¢ä¸ºå­—ç¬¦ä¸²å 10å­—èŠ‚ï¼Œ'\0'å 1å­—èŠ‚
         char *p_maskStr = malloc(maskStrLength);
         if (p_maskStr == NULL)
         {
@@ -149,11 +149,11 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
             exit(1);
         }
 
-        // ¿ªÊ¼¼àÌı
+        // å¼€å§‹ç›‘å¬
         LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
                 , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "start observe"), &isCopy));
 
-        // ³õÊ¼»¯
+        // åˆå§‹åŒ–
         int fileDescriptor = inotify_init();
         if (fileDescriptor < 0)
         {
@@ -166,7 +166,7 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
             exit(1);
         }
 
-        // Ìí¼Ó±»¼àÌıÎÄ¼şµ½¼àÌıÁĞ±í
+        // æ·»åŠ è¢«ç›‘å¬æ–‡ä»¶åˆ°ç›‘å¬åˆ—è¡¨
         int watchDescriptor = inotify_add_watch(fileDescriptor, APP_OBSERVED_FILE, IN_ALL_EVENTS);
         if (watchDescriptor < 0)
         {
@@ -181,10 +181,10 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
 
         while(1)
         {
-            // read»á×èÈû½ø³Ì
+            // readä¼šé˜»å¡è¿›ç¨‹
             size_t readBytes = read(fileDescriptor, p_buf, sizeof(struct inotify_event));
 
-            // ´òÓ¡mask
+            // æ‰“å°mask
             snprintf(p_maskStr, maskStrLength, "mask=0x%x\0", ((struct inotify_event *) p_buf)->mask);
             LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
                     , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, p_maskStr), &isCopy));
@@ -194,14 +194,14 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
             	LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
                     , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "the observer file is deleted"), &isCopy));
                 
-                 inotify_rm_watch(fileDescriptor, watchDescriptor);
-                 break;
+                 //inotify_rm_watch(fileDescriptor, watchDescriptor);
+                 //break;
                  
-                //Êµ¼ÊÅĞ¶ÏÊÇÓĞÎÊÌâµÄ£¬²»ÄÜÈ·¶¨ÄÄ¸öÊÇĞ¶ÔØ£¬ÄÄ¸öÊÇÇå³ıÊı¾İ£¬ÏÈÆÁ±Î
+                //å®é™…åˆ¤æ–­æ˜¯æœ‰é—®é¢˜çš„ï¼Œä¸èƒ½ç¡®å®šå“ªä¸ªæ˜¯å¸è½½ï¼Œå“ªä¸ªæ˜¯æ¸…é™¤æ•°æ®ï¼Œå…ˆå±è”½
                 
-                /*
+                
                 FILE *p_appDir = fopen(APP_DIR, "r");
-                // È·ÈÏÒÑĞ¶ÔØ
+                // ç¡®è®¤å·²å¸è½½
                 if (p_appDir == NULL)
                 {
 	                LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
@@ -210,14 +210,14 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
 
                     break;
                 }
-                // Î´Ğ¶ÔØ£¬¿ÉÄÜÓÃ»§Ö´ĞĞÁË"Çå³ıÊı¾İ"
+                // æœªå¸è½½ï¼Œå¯èƒ½ç”¨æˆ·æ‰§è¡Œäº†"æ¸…é™¤æ•°æ®"
                 else
                 {
 	                LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
 	                    , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "app not uninstall , the data is empty"), &isCopy));
 	                    fclose(p_appDir);
 	
-	                    // ÖØĞÂ´´½¨±»¼àÌıÎÄ¼ş£¬²¢ÖØĞÂ¼àÌı
+	                    // é‡æ–°åˆ›å»ºè¢«ç›‘å¬æ–‡ä»¶ï¼Œå¹¶é‡æ–°ç›‘å¬
 	                    FILE *p_observedFile = fopen(APP_OBSERVED_FILE, "w");
 	                    fclose(p_observedFile);
 	
@@ -233,37 +233,37 @@ JNIEXPORT int JNICALL Java_com_lzyblog_uninstalldemo_UninstalledObserverActivity
 	                        exit(1);
                     	}
                 }
-                */
+                
             }
         }
 
-        // ÊÍ·Å×ÊÔ´
+        // é‡Šæ”¾èµ„æº
         free(p_buf);
         free(p_maskStr);
 
-        // Í£Ö¹¼àÌı
+        // åœæ­¢ç›‘å¬
         LOG_DEBUG((*env)->GetStringUTFChars(env, tag, &isCopy)
                 , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "stop observe"), &isCopy));
 
         if (userSerial == NULL)
         {
-            // Ö´ĞĞÃüÁîam start -a android.intent.action.VIEW -d $(url)
+            // æ‰§è¡Œå‘½ä»¤am start -a android.intent.action.VIEW -d $(url)
             execlp("am", "am", "start", "-a", "android.intent.action.VIEW", "-d", websiteStr, (char *)NULL);
         }
         else
         {
-            // Ö´ĞĞÃüÁîam start --user userSerial -a android.intent.action.VIEW -d $(url)
+            // æ‰§è¡Œå‘½ä»¤am start --user userSerial -a android.intent.action.VIEW -d $(url)
             execlp("am", "am", "start", "--user", (*env)->GetStringUTFChars(env, userSerial, &isCopy), "-a", "android.intent.action.VIEW", "-d", websiteStr, (char *)NULL);
         }
 
-        // Ö´ĞĞÃüÁîÊ§°Ülog
+        // æ‰§è¡Œå‘½ä»¤å¤±è´¥log
         LOG_ERROR((*env)->GetStringUTFChars(env, tag, &isCopy)
                 , (*env)->GetStringUTFChars(env, (*env)->NewStringUTF(env, "exec AM command failed !!!"), &isCopy));
 		(*env)->ReleaseStringUTFChars(env, website, websiteStr);
     }
     else
     {
-        // ¸¸½ø³ÌÖ±½ÓÍË³ö£¬Ê¹×Ó½ø³Ì±»init½ø³ÌÁìÑø£¬ÒÔ±ÜÃâ×Ó½ø³Ì½©ËÀ£¬Í¬Ê±·µ»Ø×Ó½ø³Ìpid
+        // çˆ¶è¿›ç¨‹ç›´æ¥é€€å‡ºï¼Œä½¿å­è¿›ç¨‹è¢«initè¿›ç¨‹é¢†å…»ï¼Œä»¥é¿å…å­è¿›ç¨‹åƒµæ­»ï¼ŒåŒæ—¶è¿”å›å­è¿›ç¨‹pid
 		(*env)->ReleaseStringUTFChars(env, website, websiteStr);
         return pid;
     }
